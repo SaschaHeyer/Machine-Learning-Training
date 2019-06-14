@@ -1,0 +1,14 @@
+trainingInput:
+    scaleTier: BASIC_GPU
+    hyperparameters:
+        goal: MAXIMIZE
+        hyperparameterMetricTag: accuracy
+        maxTrials: 3
+        params:
+          - parameterName: dropout
+            type: DISCRETE
+            discreteValues:
+              - 0.1
+              - 0.3
+              - 0.5
+        
