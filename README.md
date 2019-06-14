@@ -25,3 +25,4 @@ I update this repository while learning new technologies and topics.  **It is us
 2019-06-14
 
 * Initial repository and structure.
+* Added several basic kubeflow notebooks.
