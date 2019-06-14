@@ -17,7 +17,7 @@ I update this repository while learning new technologies and topics.  **It is us
     ├── kubeflow                 # Implementations related to kubeflow.
     ├── notebooks                # Several notebooks for different kind of technologies.
     ├── notes                    # Personal machine learning notes, as self reminder =).
-    └─── presentations           # Personal presentations related to ml.
+    └── presentations            # Personal presentations related to ml.
 
 ## Changelog
 
