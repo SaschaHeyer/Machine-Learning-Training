@@ -1,1 +1,1 @@
-# Named Entity Recognition with Kubeflow and Keras 
+# [WIP] Named Entity Recognition with Kubeflow and Keras 
