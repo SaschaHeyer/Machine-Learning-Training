@@ -2,7 +2,6 @@ name: preprocess
 description: Performs the IOB preprocessing.
 inputs:
 - {name: Input 1 URI, type: GCSPath}
-- {name: Parameter 1, type: Integer}
 - {name: Output x URI template, type: GCSPath}
 - {name: Output y URI template, type: GCSPath}
 outputs:
@@ -10,17 +9,22 @@ outputs:
     type: GCSPath
   - name: Output y URI
     type: String
+  - name: Output tags
+    type: String
+  - name: Output words
+    type: String
 implementation:
   container:
     image: gcr.io/spielwiese-sascha-heyer/kubeflow/training/preprocess:latest
     command: [
       python3, /pipelines/component/src/component.py,
       --input1-path,            {inputValue: Input 1 URI},
-      --param1,                 {inputValue: Parameter 1},
       --output-y-path,          {inputValue: Output y URI template},
       --output-x-path,          {inputValue: Output x URI template},
 
-      --output-y-path-file,   {outputPath: Output y URI},
-      --output-x-path-file,   {outputPath: Output x URI},
+      --output-y-path-file,     {outputPath: Output y URI},
+      --output-x-path-file,     {outputPath: Output x URI},
+      --output-tags,            {outputPath: Output tags},
+      --output-words,           {outputPath: Output words},
 
     ]

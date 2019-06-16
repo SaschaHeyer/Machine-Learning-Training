@@ -7,6 +7,7 @@ import numpy as np
 import pandas as pd
 import pickle  
 
+
 from keras.preprocessing.sequence import pad_sequences
 from tensorflow.python.keras.preprocessing import sequence
 from tensorflow.keras.preprocessing import text
@@ -25,7 +26,8 @@ def read_data(input1_path):
 parser = argparse.ArgumentParser(description='My program description')
 parser.add_argument('--input1-path', type=str, help='Path of the local file or GCS blob containing the Input 1 data.')
 
-parser.add_argument('--param1', type=int, default=100, help='Parameter 1.')
+parser.add_argument('--output-tags', type=str, help='')
+parser.add_argument('--output-words', type=str, help='')
 
 parser.add_argument('--output-x-path', type=str, help='')
 parser.add_argument('--output-x-path-file', type=str, help='')
@@ -99,3 +101,10 @@ Path(args.output_x_path_file).write_text(args.output_x_path)
 
 Path(args.output_y_path_file).parent.mkdir(parents=True, exist_ok=True)
 Path(args.output_y_path_file).write_text(args.output_y_path)
+
+# TODO @Sascha use int rather then str
+Path(args.output_tags).parent.mkdir(parents=True, exist_ok=True)
+Path(args.output_tags).write_text(str(n_tags))
+
+Path(args.output_words).parent.mkdir(parents=True, exist_ok=True)
+Path(args.output_words).write_text(str(n_words))
