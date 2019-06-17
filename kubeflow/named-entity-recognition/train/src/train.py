@@ -35,16 +35,19 @@ parser.add_argument('--output-model-path-file', type=str, help='')
 
 args = parser.parse_args()
 
+print(os.path.dirname(args.output_model_path))
+
 print(args.input_x_path)
 print(args.input_y_path)
+print(args.input_job_dir)
 print(args.input_tags)
 print(args.input_words)
+print(args.output_model_path)
+print(args.output_model_path_file)
 
 X = load_feature(args.input_x_path)
 y = load_label(args.input_y_path)
 
-#print(X_train)
-#print(y_train)
 
 # split data
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
@@ -72,6 +75,14 @@ history = model.fit(X_train, np.array(y_train), batch_size=32, epochs=1, validat
 
 loss, accuracy = model.evaluate(X_test, np.array(y_test))
 
+# save model
+print('saved model to ', args.output_model_path)
+model.save('keras_saved_model.h5')
+with file_io.FileIO('keras_saved_model.h5', mode='rb') as input_f:
+  with file_io.FileIO(args.output_model_path + '/keras_saved_model.h5', mode='wb+') as output_f:
+    output_f.write(input_f.read())
+
+# write out metrics
 metrics = {
         'metrics': [{
           'name': 'accuracy-score', # The name of the metric. Visualized as the column name in the runs table.
@@ -80,6 +91,10 @@ metrics = {
         }]
       }
 
+with file_io.FileIO('/mlpipeline-metrics.json', 'w') as f:
+  json.dump(metrics, f)
+
+# write out TensorBoard viewer
 metadata = {
     'outputs' : [{
       'type': 'tensorboard',
@@ -90,15 +105,6 @@ metadata = {
 with open('/mlpipeline-ui-metadata.json', 'w') as f:
   json.dump(metadata, f)
 
-with file_io.FileIO('/mlpipeline-metrics.json', 'w') as f:
-  json.dump(metrics, f)
-
-# writing x and y path to a file for downstream tasks
-Path(args.output_x_path_file).parent.mkdir(parents=True, exist_ok=True)
-Path(args.output_x_path_file).write_text('test')
-
-Path(args.output_y_path_file).parent.mkdir(parents=True, exist_ok=True)
-Path(args.output_y_path_file).write_text('test')
 
 Path(args.output_model_path_file).parent.mkdir(parents=True, exist_ok=True)
 Path(args.output_model_path_file).write_text(args.output_model_path)
