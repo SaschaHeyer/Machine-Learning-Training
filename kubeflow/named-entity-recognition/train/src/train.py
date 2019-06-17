@@ -13,6 +13,8 @@ from keras.callbacks import TensorBoard
 
 from sklearn.model_selection import train_test_split
 
+MODEL_FILE = 'keras_saved_model.h5'
+
 def load_feature(input_x_path):
   with gfile.Open(input_x_path, 'rb') as input_x_file:
     return pickle.loads(input_x_file.read())
@@ -77,9 +79,9 @@ loss, accuracy = model.evaluate(X_test, np.array(y_test))
 
 # save model
 print('saved model to ', args.output_model_path)
-model.save('keras_saved_model.h5')
-with file_io.FileIO('keras_saved_model.h5', mode='rb') as input_f:
-  with file_io.FileIO(args.output_model_path + '/keras_saved_model.h5', mode='wb+') as output_f:
+model.save(MODEL_FILE)
+with file_io.FileIO(MODEL_FILE, mode='rb') as input_f:
+  with file_io.FileIO(args.output_model_path + '/' + MODEL_FILE, mode='wb+') as output_f:
     output_f.write(input_f.read())
 
 # write out metrics
@@ -107,4 +109,4 @@ with open('/mlpipeline-ui-metadata.json', 'w') as f:
 
 
 Path(args.output_model_path_file).parent.mkdir(parents=True, exist_ok=True)
-Path(args.output_model_path_file).write_text(args.output_model_path)
+Path(args.output_model_path_file).write_text(args.output_model_path + '/' + MODEL_FILE)
