@@ -35,6 +35,9 @@ parser.add_argument('--output-x-path-file', type=str, help='')
 parser.add_argument('--output-y-path', type=str, help='')
 parser.add_argument('--output-y-path-file', type=str, help='')
 
+parser.add_argument('--output-preprocessing-state-path', type=str, help='')
+parser.add_argument('--output-preprocessing-state-path-file', type=str, help='')
+
 args = parser.parse_args()
 
 # read data
@@ -89,11 +92,19 @@ y = [[tag2idx[w[1]] for w in s] for s in sentences]
 y = pad_sequences(maxlen=140, sequences=y, padding="post", value=tag2idx["O"])
 y = [to_categorical(i, num_classes=n_tags) for i in y]
 
+# export features and labels for training
 with gfile.GFile(args.output_x_path, 'w') as output_X:
     pickle.dump(X, output_X)
 
 with gfile.GFile(args.output_y_path, 'w') as output_y:
     pickle.dump(y, output_y)
+
+# export preprocessing state, required for custom prediction route used during inference
+with gfile.GFile(args.output_preprocessing_state_path, 'w') as output_preprocessing_state:
+    pickle.dump(processor, output_preprocessing_state)
+
+#with open('./processor_state.pkl', 'wb') as f:
+#  pickle.dump(processor, f)
 
 # writing x and y path to a file for downstream tasks
 Path(args.output_x_path_file).parent.mkdir(parents=True, exist_ok=True)
@@ -101,6 +112,9 @@ Path(args.output_x_path_file).write_text(args.output_x_path)
 
 Path(args.output_y_path_file).parent.mkdir(parents=True, exist_ok=True)
 Path(args.output_y_path_file).write_text(args.output_y_path)
+
+Path(args.output_preprocessing_state_path_file).parent.mkdir(parents=True, exist_ok=True)
+Path(args.output_preprocessing_state_path_file).write_text(args.output_preprocessing_state_path)
 
 # TODO @Sascha use int rather then str
 Path(args.output_tags).parent.mkdir(parents=True, exist_ok=True)
