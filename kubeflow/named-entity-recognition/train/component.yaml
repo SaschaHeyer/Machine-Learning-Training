@@ -6,13 +6,11 @@ inputs:
 - {name: Input job dir URI, type: GCSPath}
 - {name: Input tags, type: Integer}
 - {name: Input words, type: Integer}
-- {name: Output x URI template, type: GCSPath}
-- {name: Output y URI template, type: GCSPath}
+- {name: Output model URI template, type: GCSPath}
+
 outputs:
-  - name: Output x URI
+  - name: Output model URI
     type: GCSPath
-  - name: Output y URI
-    type: String
 implementation:
   container:
     image: gcr.io/spielwiese-sascha-heyer/kubeflow/training/train:latest
@@ -23,10 +21,8 @@ implementation:
       --input-y-path,             {inputValue: Input y URI},
       --input-tags,               {inputValue: Input tags},
       --input-words,              {inputValue: Input words},
-      --output-y-path,            {inputValue: Output y URI template},
-      --output-x-path,            {inputValue: Output x URI template},
+      --output-model-path,        {inputValue: Output model URI template},
 
-      --output-y-path-file,       {outputPath: Output y URI},
-      --output-x-path-file,       {outputPath: Output x URI},
+      --output-model-path-file,   {outputPath: Output model URI},
 
     ]

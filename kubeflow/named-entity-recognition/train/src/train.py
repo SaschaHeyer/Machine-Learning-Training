@@ -30,11 +30,8 @@ parser.add_argument('--input-job-dir', type=str, help='')
 parser.add_argument('--input-tags', type=int, help='')
 parser.add_argument('--input-words', type=int, help='')
 
-parser.add_argument('--output-x-path', type=str, help='')
-parser.add_argument('--output-x-path-file', type=str, help='')
-
-parser.add_argument('--output-y-path', type=str, help='')
-parser.add_argument('--output-y-path-file', type=str, help='')
+parser.add_argument('--output-model-path', type=str, help='')
+parser.add_argument('--output-model-path-file', type=str, help='')
 
 args = parser.parse_args()
 
@@ -75,9 +72,6 @@ history = model.fit(X_train, np.array(y_train), batch_size=32, epochs=1, validat
 
 loss, accuracy = model.evaluate(X_test, np.array(y_test))
 
-
-# TODO @Sascha save model
-
 metrics = {
         'metrics': [{
           'name': 'accuracy-score', # The name of the metric. Visualized as the column name in the runs table.
@@ -105,3 +99,6 @@ Path(args.output_x_path_file).write_text('test')
 
 Path(args.output_y_path_file).parent.mkdir(parents=True, exist_ok=True)
 Path(args.output_y_path_file).write_text('test')
+
+Path(args.output_model_path_file).parent.mkdir(parents=True, exist_ok=True)
+Path(args.output_model_path_file).write_text(args.output_model_path)
