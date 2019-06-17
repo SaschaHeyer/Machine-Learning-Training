@@ -21,7 +21,13 @@ I update this repository while learning new technologies and topics.  **It is us
 
 ## Changelog
 
-### v2.14
+### v0.2
+2019-06-17
+
+* NER added processing state export for custom prediction routine usage
+* NER added logic to export keras model
+
+### v0.1
 2019-06-14
 
 * Initial repository and structure.
