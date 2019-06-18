@@ -13,11 +13,13 @@ I update this repository while learning new technologies and topics.  **It is us
 
 ## Repository structure
     .
-    ├── ai-platform              # Implementations related to Google AI Platform.
-    ├── kubeflow                 # Implementations related to kubeflow.
-    ├── notebooks                # Several notebooks for different kind of technologies.
-    ├── notes                    # Personal machine learning notes, as self reminder =).
-    └── presentations            # Personal presentations related to ml.
+    ├── ai-platform                     # Implementations related to Google AI Platform.
+    ├── kubeflow                        # Implementations related to kubeflow.
+        ├── components                  # Several components
+        └── named-entity-recognition    # NER based on Keras and Kubeflow with AI Platform
+    ├── notebooks                       # Several notebooks for different kind of technologies.
+    ├── notes                           # Personal machine learning notes, as self reminder =).
+    └── presentations                   # Personal presentations related to ml.
 
 ## Changelog
 
