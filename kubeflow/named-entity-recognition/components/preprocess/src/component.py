@@ -15,6 +15,8 @@ from keras.utils import to_categorical
 
 from text_preprocessor import TextPreprocessor
 
+PREPROCESS_FILE = 'processor_state.pkl'
+
 def read_data(input1_path):
     with gfile.Open(args.input1_path, 'r') as input1_file:
         print('processing')
@@ -100,7 +102,7 @@ with gfile.GFile(args.output_y_path, 'w') as output_y:
     pickle.dump(y, output_y)
 
 # export preprocessing state, required for custom prediction route used during inference
-with gfile.GFile(args.output_preprocessing_state_path, 'w') as output_preprocessing_state:
+with gfile.GFile(args.output_preprocessing_state_path + '/' + PREPROCESS_FILE, 'w') as output_preprocessing_state:
     pickle.dump(processor, output_preprocessing_state)
 
 #with open('./processor_state.pkl', 'wb') as f:
@@ -114,7 +116,7 @@ Path(args.output_y_path_file).parent.mkdir(parents=True, exist_ok=True)
 Path(args.output_y_path_file).write_text(args.output_y_path)
 
 Path(args.output_preprocessing_state_path_file).parent.mkdir(parents=True, exist_ok=True)
-Path(args.output_preprocessing_state_path_file).write_text(args.output_preprocessing_state_path)
+Path(args.output_preprocessing_state_path_file).write_text(args.output_preprocessing_state_path + '/' + PREPROCESS_FILE)
 
 # TODO @Sascha use int rather then str
 Path(args.output_tags).parent.mkdir(parents=True, exist_ok=True)

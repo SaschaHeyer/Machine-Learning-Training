@@ -109,4 +109,4 @@ with open('/mlpipeline-ui-metadata.json', 'w') as f:
 
 
 Path(args.output_model_path_file).parent.mkdir(parents=True, exist_ok=True)
-Path(args.output_model_path_file).write_text(args.output_model_path + '/' + MODEL_FILE)
+Path(args.output_model_path_file).write_text(args.output_model_path)
