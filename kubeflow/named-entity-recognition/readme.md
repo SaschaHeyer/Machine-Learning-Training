@@ -42,6 +42,7 @@ This Kubeflow project contains 3 components
 1. Upload the custom prediction routine [WIP]
 
 ## TODO
+- [ ] Add hyperparameter as component input
 - [ ] Add the custom prediction routine implementation
 
 
