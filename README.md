@@ -21,6 +21,11 @@ I update this repository while learning new technologies and topics.  **It is us
 
 ## Changelog
 
+### v0.3
+2019-06-18
+
+* NER added deployment for AI Platform using beta feature for custom processing routine
+
 ### v0.2
 2019-06-17
 
