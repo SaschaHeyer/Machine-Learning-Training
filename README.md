@@ -9,8 +9,6 @@ Contains jupyter notebooks and examples for Keras, Google AI Platform and Kubefl
 
 I update this repository while learning new technologies and topics.  **It is used as a self reminder for my future self.**
 
-
-
 ## Repository structure
     .
     ├── ai-platform                     # Implementations related to Google AI Platform.
@@ -20,6 +18,10 @@ I update this repository while learning new technologies and topics.  **It is us
     ├── notebooks                       # Several notebooks for different kind of technologies.
     ├── notes                           # Personal machine learning notes, as self reminder =).
     └── presentations                   # Personal presentations related to ml.
+
+## projects
+
+* [Named Entity Recognition with Keras and Kubeflow](/kubeflow/named-entity-recognition/readme.md)
 
 ## Changelog
 

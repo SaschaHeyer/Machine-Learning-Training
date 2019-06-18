@@ -8,6 +8,8 @@ https://cloud.google.com/ml-engine/docs/tensorflow/custom-prediction-routines
 
 Our model directory includes a HDF5 Keras model with a custom preprocessor. 
 
+![ner sample](https://github.com/SaschaHeyer/Machine-Learning-Training/blob/master/documentation-files/ner.png?raw=true)
+
 ## Goals
 
 * Demonstrate how to use Keras only models
