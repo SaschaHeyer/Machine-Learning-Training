@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 import argparse
 import os
 from pathlib import Path
@@ -6,7 +5,6 @@ from tensorflow import gfile # Supports both local paths and Cloud Storage (GCS)
 import numpy as np
 import pandas as pd
 import pickle  
-
 
 from keras.preprocessing.sequence import pad_sequences
 from tensorflow.python.keras.preprocessing import sequence

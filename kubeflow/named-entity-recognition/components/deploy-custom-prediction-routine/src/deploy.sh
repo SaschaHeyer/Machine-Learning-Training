@@ -1,5 +1,3 @@
-echo 'test 7'
-
 # loop through all parameters
 while [ "$1" != "" ]; do
     case $1 in
@@ -55,6 +53,7 @@ while [ "$1" != "" ]; do
    esac
 done
 
+# echo inputs
 echo MODEL_PATH               = "${MODEL_PATH}"
 echo MODEL                    = "${MODEL_EXPORT_PATH}"
 echo MODEL_NAME               = "${MODEL_NAME}"
@@ -64,7 +63,6 @@ echo RUNTIME_VERSION          = "${RUNTIME_VERSION}"
 echo MODEL_PREDICTION_CLASS   = "${MODEL_PREDICTION_CLASS}"
 echo MODEL_PYTHON_VERSION     = "${MODEL_PYTHON_VERSION}"
 echo MODEL_PACKAGE_URIS       = "${MODEL_PACKAGE_URIS}"
-
 
 
 # create model
