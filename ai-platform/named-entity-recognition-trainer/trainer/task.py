@@ -90,6 +90,12 @@ def get_args():
       default=0.1,
       type=float,
       help='Dropout')
+  
+  parser.add_argument(
+      '--lstmunits',
+      default=100,
+      type=int,
+      help='LSTM Units')
 
   parser.add_argument(
       '--job-dir',
@@ -164,7 +170,7 @@ def train(args, data):
     input = Input(shape=(140,))
     model = Embedding(input_dim=n_words, output_dim=140, input_length=140)(input)
     model = Dropout(args.dropout)(model)
-    model = Bidirectional(LSTM(units=100, return_sequences=True, recurrent_dropout=0.1))(model)
+    model = Bidirectional(LSTM(units=args.lstmunits, return_sequences=True, recurrent_dropout=0.1))(model)
     out = TimeDistributed(Dense(n_tags, activation="softmax"))(model)  # softmax output layer
 
     model = Model(input, out)

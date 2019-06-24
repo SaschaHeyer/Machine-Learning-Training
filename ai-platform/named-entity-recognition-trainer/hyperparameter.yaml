@@ -11,4 +11,9 @@ trainingInput:
               - 0.1
               - 0.3
               - 0.5
+          - parameterName: lstmunits
+            type: DISCRETE
+            discreteValues:
+              - 50
+              - 100
         

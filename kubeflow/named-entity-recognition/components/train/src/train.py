@@ -31,6 +31,7 @@ parser.add_argument('--input-job-dir', type=str, help='')
 
 parser.add_argument('--input-tags', type=int, help='')
 parser.add_argument('--input-words', type=int, help='')
+parser.add_argument('--input-dropout', type=float, default=0.1 help='')
 
 parser.add_argument('--output-model-path', type=str, help='')
 parser.add_argument('--output-model-path-file', type=str, help='')
@@ -44,6 +45,7 @@ print(args.input_y_path)
 print(args.input_job_dir)
 print(args.input_tags)
 print(args.input_words)
+print(args.input_dropout)
 print(args.output_model_path)
 print(args.output_model_path_file)
 
@@ -66,7 +68,7 @@ callbacks = [tensorboard]
 # model
 input = Input(shape=(140,))
 model = Embedding(input_dim=args.input_words, output_dim=140, input_length=140)(input)
-model = Dropout(0.1)(model)
+model = Dropout(args.input_dropout)(model)
 model = Bidirectional(LSTM(units=100, return_sequences=True, recurrent_dropout=0.1))(model)
 out = TimeDistributed(Dense(args.input_tags, activation="softmax"))(model)  # softmax output layer
 model = Model(input, out)
