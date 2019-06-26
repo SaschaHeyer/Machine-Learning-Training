@@ -25,6 +25,11 @@ I update this repository while learning new technologies and topics.  **It is us
 
 ## Changelog
 
+### v0.4
+2019-06-26
+
+* added training component for concatenating strings
+
 ### v0.3
 2019-06-18
 

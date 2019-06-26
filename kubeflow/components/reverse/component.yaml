@@ -3,8 +3,7 @@ description: Takes text and reverse its content
 
 inputs:
   - name: text
-    description: The text which should be reverted 
-    default: '/text.txt'
+    description: 'The text which should be reverted'
     type: String
 
 outputs:
@@ -14,7 +13,7 @@ outputs:
 
 implementation:
   container:
-    image: gcr.io/spielwiese-sascha-heyer/kubeflow/training/component:latest
+    image: gcr.io/spielwiese-sascha-heyer/kubeflow/training/reverse:latest
     command: [python3, /pipelines/component/src/component.py]
     args: [
       --input-text, {inputValue: text},
