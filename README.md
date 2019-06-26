@@ -29,6 +29,7 @@ I update this repository while learning new technologies and topics.  **It is us
 2019-06-26
 
 * added training component for concatenating strings
+* added training notebook for reusable components and pipelines
 
 ### v0.3
 2019-06-18
