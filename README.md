@@ -19,10 +19,6 @@ I update this repository while learning new technologies and topics.  **It is us
     ├── notes                           # Personal machine learning notes, as self reminder =).
     └── presentations                   # Personal presentations related to ml.
 
-## projects
-
-* [Named Entity Recognition with Keras and Kubeflow](/kubeflow/named-entity-recognition/readme.md)
-
 ## Changelog
 
 ### v0.4
