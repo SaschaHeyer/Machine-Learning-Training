@@ -108,3 +108,7 @@ venv.bak/
 *.csv
 
 *.yaml
+.vscode/settings.json
+
+# ai platform
+local-training-output

@@ -1,79 +1,20 @@
 import argparse
-import tensorflow as tf
-from tensorflow.python.lib.io import file_io
-
-import tensorflow as tf
-from tensorflow import keras
-
-from tensorflow.python.saved_model import builder as saved_model_builder
-from tensorflow.python.saved_model import signature_constants
-from tensorflow.python.saved_model import tag_constants
-from tensorflow.python.saved_model.signature_def_utils_impl import predict_signature_def
-
-from pandas.compat import StringIO
-import pandas as pd
 import numpy as np
-
-from keras.preprocessing.sequence import pad_sequences
-from keras.utils import to_categorical
-from keras.models import Model, Input
-from keras.layers import LSTM, Embedding, Dense
-from keras.layers import TimeDistributed, Dropout, Bidirectional
-
-from keras import backend as K
-
 
 from keras.callbacks import TensorBoard
 
+from tensorflow.python.lib.io import file_io
+from sklearn.model_selection import train_test_split
+
+import pandas as pd
+from pandas.compat import StringIO
+
 import os
-import tempfile
-from datetime import datetime
-import hypertune
+#import hypertune
 
+import trainer.model as model
+import trainer.preprocessor as preprocessor
 
-class SentenceGetter(object):
-    
-    def __init__(self, dataset):
-        self.n_sent = 1
-        self.dataset = dataset
-        self.empty = False
-        agg_func = lambda s: [(w, t) for w,t in zip(s["word"].values.tolist(),
-                                                    s["tag"].values.tolist())]
-        
-        self.grouped = self.dataset.groupby("sentence_idx").apply(agg_func)
-        self.sentences = [s for s in self.grouped]
-    
-    def get_next(self):
-        try:
-            s = self.grouped["Sentence: {}".format(self.n_sent)]
-            self.n_sent += 1
-            return s
-        except:
-            return None
-
-from keras.preprocessing.sequence import pad_sequences
-from tensorflow.python.keras.preprocessing import sequence
-from tensorflow.keras.preprocessing import text
-
-class TextPreprocessor(object):
-  
-  def __init__(self, max_sequence_length):
-    self._max_sequence_length = max_sequence_length
-    self._labels = None
-    self.number_words = None
-    self._tokenizer = None
-    
-  def fit(self, instances):
-    tokenizer = text.Tokenizer(lower=False, filters=[], oov_token=None)
-    tokenizer.fit_on_texts(instances)
-    self._tokenizer = tokenizer
-    self.number_words = len(tokenizer.word_index)
-    print(self.number_words)
-    
-  def transform(self,instances):
-    sequences = self._tokenizer.texts_to_sequences(instances)
-    padded_sequences = pad_sequences(maxlen=140, sequences=sequences, padding="post",value=self.number_words - 1)
-    return padded_sequences
 
 def get_args():
   parser = argparse.ArgumentParser()
@@ -106,7 +47,6 @@ def get_args():
   args, _ = parser.parse_known_args()
   return args
 
-
 def read_data(gcs_path):
    print('downloading csv file from', gcs_path)     
    file_stream = file_io.FileIO(gcs_path, mode='r')
@@ -123,74 +63,30 @@ def read_data(gcs_path):
 
    return data
 
+def train(args, preprocessed_data):
+    n_words, n_tags, X, y = preprocessed_data
 
-
-def train(args, data):
-    getter = SentenceGetter(data)
-    sentences = getter.sentences
-    sentences_list = [" ".join([s[0] for s in sent]) for sent in sentences]
-    sentences_list[0]
-
-    maxlen = max([len(s) for s in sentences])
-    print ('Maximum sequence length:', maxlen)
-
-    words = list(set(data["word"].values))
-    #words.append("ENDPAD")
-    n_words = len(words)
-    print ('Number of words:', n_words)
-
-    tags = list(set(data["tag"].values))
-    n_tags = len(tags)
-    print ('Number of tags:', n_tags)
-    print ('Type of tags:', tags)
-
-    processor = TextPreprocessor(140)
-    processor.fit(sentences_list)
-    processor.labels = list(set(data["tag"].values))
-
-    X = processor.transform(sentences_list)
-
-    tag2idx = {t: i for i, t in enumerate(tags)}
-
-    y = [[tag2idx[w[1]] for w in s] for s in sentences]
-    y = pad_sequences(maxlen=140, sequences=y, padding="post", value=tag2idx["O"])
-
-    from keras.utils import to_categorical
-    y = [to_categorical(i, num_classes=n_tags) for i in y]
-
-    from sklearn.model_selection import train_test_split
+    # split data into train and test
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
 
-    from keras.models import Model, Input
-    from keras.layers import LSTM, Embedding, Dense, TimeDistributed, Dropout, Bidirectional
-
-    #logs_path = args.job_dir + '/logs/' + datetime.now().isoformat()
-    #print('Using logs_path located at {}'.format(logs_path))
-
-    input = Input(shape=(140,))
-    model = Embedding(input_dim=n_words, output_dim=140, input_length=140)(input)
-    model = Dropout(args.dropout)(model)
-    model = Bidirectional(LSTM(units=args.lstmunits, return_sequences=True, recurrent_dropout=0.1))(model)
-    out = TimeDistributed(Dense(n_tags, activation="softmax"))(model)  # softmax output layer
-
-    model = Model(input, out)
-
-    model.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
-
-
-
-
-    model.summary()
-
+    # create model
+    bi_lstm_model = model.create_keras_model(n_words=n_words, 
+                                             n_tags=n_tags, 
+                                             units=args.lstmunits,
+                                             maxlen=140, 
+                                             dropout=args.dropout)
+    # tensorboard
     tensorboard = TensorBoard(
       log_dir=os.path.join(args.job_dir, 'logs'),
       histogram_freq=0,
       write_graph=True,
       embeddings_freq=0)
 
+    # callbacks
     callbacks = [tensorboard]
 
-    history = model.fit(
+    # train bi lstm model
+    history = bi_lstm_model.fit(
         X_train, 
         np.array(y_train), 
         batch_size=1024, 
@@ -199,24 +95,22 @@ def train(args, data):
         verbose=1,
         callbacks=callbacks)
 
-
-
-    score = model.evaluate(X_test, np.array(y_test), verbose=0)
+    # evaluate
+    score = bi_lstm_model.evaluate(X_test, np.array(y_test), verbose=0)
     print('Test loss:', score[0])
     print('Test accuracy:', score[1])
-
+    
+    # hyperparameter
+    '''
     hpt = hypertune.HyperTune()
     hpt.report_hyperparameter_tuning_metric(
         hyperparameter_metric_tag='accuracy',
         metric_value=score[1]
         )
+    '''
     
-    print('save model')
-    model.save('keras_saved_model.h5')
-    #print('write model to folder')
-    with file_io.FileIO('keras_saved_model.h5', mode='rb') as input_f:
-        with file_io.FileIO(args.job_dir + '/keras_saved_model.h5', mode='wb+') as output_f:
-            output_f.write(input_f.read())
+    ## save model
+    model.save_model(bi_lstm_model, args.job_dir)
 
     return
 
@@ -224,4 +118,5 @@ if __name__ == '__main__':
     args = get_args()
 
     data = read_data(args.train_file)
-    train(args, data)
+    preprocessed_data = preprocessor.preprocess(data)
+    train(args, preprocessed_data)

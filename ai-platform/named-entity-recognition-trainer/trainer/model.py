@@ -1,15 +1,13 @@
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
 from keras.models import Model, Input
 from keras.layers import LSTM, Embedding, Dense, TimeDistributed, Dropout, Bidirectional
 
-import tensorflow as tf
+from tensorflow.python.lib.io import file_io
 
-#maxlen = 140
-#dropout= 0.1
-def create_keras_model(n_words, n_tags, units, maxlen, dropout):
+def create_keras_model(n_words, 
+                       n_tags, 
+                       units, 
+                       maxlen, 
+                       dropout):
 
   input = Input(shape=(maxlen,))
   model = Embedding(input_dim=n_words, output_dim=maxlen, input_length=maxlen)(input)
@@ -23,3 +21,13 @@ def create_keras_model(n_words, n_tags, units, maxlen, dropout):
 
   model.summary()
   return model
+
+def save_model(model, job_dir):
+  model.save('keras_saved_model.h5')
+  
+  print('write model to folder', job_dir)
+  with file_io.FileIO('keras_saved_model.h5', mode='rb') as input_f:
+    with file_io.FileIO(job_dir + '/keras_saved_model.h5', mode='wb+') as output_f:
+      output_f.write(input_f.read())
+        
+  return
