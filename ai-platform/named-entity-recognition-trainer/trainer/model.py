@@ -27,7 +27,7 @@ def save_model(model, job_dir):
   
   print('write model to folder', job_dir)
   with file_io.FileIO('keras_saved_model.h5', mode='rb') as input_f:
-    with file_io.FileIO(job_dir + '/keras_saved_model.h5', mode='wb+') as output_f:
+    with file_io.FileIO(job_dir + '/' + 'keras_saved_model.h5', mode='wb+') as output_f:
       output_f.write(input_f.read())
         
   return
