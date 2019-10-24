@@ -20,6 +20,11 @@ I update this repository while learning new technologies and topics.  **It is us
 
 ## Changelog
 
+### v0.5
+2019-10-24
+
+* added TFRecords with tf.hub feature extraction sample
+
 ### v0.4
 2019-06-26
 
