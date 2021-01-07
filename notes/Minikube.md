@@ -8,3 +8,12 @@ brew install minikube # install
 minikube start # start
 kubectl get po -A # test if it works
 ````
+
+## Issues
+
+### cannot start minikube
+```
+exec format error: minikube
+```
+
+try re-install or try to switch to bash as shell
