@@ -13,7 +13,7 @@ I update this repository while learning new technologies and topics.  **It is us
     .
     ├── ai-platform                     # Implementations related to Google AI Platform.
     ├── kubeflow                        # Implementations related to kubeflow.
-        └── reusable-component-training # Explains the basics of components and pipelines in Kubeflow
+        └── leightweight-component-training # Explains the basics of components and pipelines in Kubeflow
     ├── notebooks                       # Several notebooks for different kind of technologies.
     ├── notes                           # Personal machine learning notes, as self reminder =).
     └── presentations                   # Personal presentations related to ml.
